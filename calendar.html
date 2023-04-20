@@ -195,13 +195,13 @@
             markedDays.push(newMark);
             let jsonstring = JSON.stringify(markedDays);
           await  MarkDayInDB(current.Name, e.target.innerText);
-            console.log('mar vot');
+           await renderDays();
           }
           else {
             console.log(selected.dataset.user)
             if(selected.dataset.user==currentUser)
             {
-              removeMarkDayFromDB(selected.dataset.id);
+            await  removeMarkDayFromDB(selected.dataset.id);
             }
              
           }
@@ -231,7 +231,7 @@
         .catch((error) => {
           console.log(error);
         });
-       await renderDays();
+       
     }
 
 
