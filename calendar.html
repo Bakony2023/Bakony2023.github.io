@@ -69,6 +69,13 @@
       appId: "1:280439747294:web:3cfd0e30ecf8ac2029c84f",
       measurementId: "G-B5GMKEM4MH"
     };
+    
+    let currentUser=localStorage.getItem('user');
+      if(currentUser==null)
+      {
+        window.location.href = 'index.html';
+      }
+
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
@@ -80,11 +87,11 @@
 
 
 
-    var colors2 = '{"Máte":"#FF5733","Áron":"#6B8E23","Kitti":"#1E90FF","Krissoi":"#FFD700","Richárd":"#9400D3","Misi":"#FF7F50","Tomi":"#008080","Bence":"#FF1493","Patrik":"#6495ED","Szandi":"#DC143C"}';
+    var colors2 = '{"Boldi":"#cef01e", "Máté":"#FF5733","Áron":"#6B8E23","Kitti":"#1E90FF","Krissoi":"#FFD700","Richárd":"#9400D3","Misi":"#FF7F50","Tomi":"#008080","Bence":"#FF1493","Patrik":"#6495ED","Szandi":"#DC143C"}';
 
 
     const Months = { 0: { "Name": "Június", "Days": 30, "SkippingDays": 3 }, 1: { "Name": "Július", "Days": 31, "SkippingDays": 5 }, 2: { "Name": "Augusztus", "Days": 30, "SkippingDays": 1 } };
-    let currentUser = 'Misi';
+    
     let currentMonth = 0;
     let monthTitle = document.querySelector('#MonthTitle');
     let previousMonthButton = document.querySelector('#previousMonthButton');

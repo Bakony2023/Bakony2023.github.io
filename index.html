@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Belepes</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		body {
+			background-color: #121212;
+			color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-4 col-sm-6 col-xs-12">
+				<form class="bg-dark p-4 rounded shadow">
+					<h2 class="text-center mb-4">Belépés</h2>
+					<div class="form-group">
+						<label for="selectUser">Ki vagy?</label>
+						<select class="form-control" id="selectUser" required>
+							
+                                <option value="Máté">Máté</option>
+                                <option value="Aron">Áron</option>
+                                <option value="Kitti">Kitti</option>
+                                <option value="Krissoi">Krissoi</option>
+                                <option value="Richárd">Richard</option>
+                                <option value="Misi">Misike</option>
+                                <option value="Tomi">Tomi</option>
+                                <option value="Bence">Bence</option>
+                                <option value="Patrik">Patrik</option>
+                                <option value="Szandi">Szandi</option>
+								<option value="Boldi">Boldi</option>
+                           
+						</select>
+					</div>
+					<button type="reset" id="loginButton" onclick="login()" class="btn btn-primary btn-block text-uppercase mb-3">Belépek</button>
+					<span class="badge badge-warning "><b>Kérlek szépen a tényleges neveteket adjátok meg</b> <br> utána nem tudjátok megváltoztatni</span>
+					<div class="text-center">
+						
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="./login.js"></script>
+</body>
+</html>
