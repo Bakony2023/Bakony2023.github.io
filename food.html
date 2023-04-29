@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bootstrap Sidebar</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .circle {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="calendar.html">Bakony 2023</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="food.html">Kaja 🥔</a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="#">Programok</a>
+                </li> -->
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <nav id="calendarNav" class="col-md-2 d-none d-md-block sidebar">
+                <div class="sidebar-sticky">
+                    <ul id="sidebar" class="nav flex-column">
+
+                    </ul>
+                </div>
+            </nav>
+            <main role="main" class="col-md-9 bg-light ml-sm-auto col-lg-10 px-4">
+                <div class="container mt-4">
+                    <h1 class="text-center mb-4">Food Voting List</h1>
+                    <ul id="foodList" class="list-group">
+                        <li id="Pizza" class="list-group-item d-flex justify-content-between align-items-center">
+
+                            <div class="vote-buttons">
+                                <button class="btn btn-link vote-up"><i class="fas fa-thumbs-up"></i></button>
+                                <button class="btn btn-link vote-down"><i class="fas fa-thumbs-down"></i></button>
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Sushi
+                            <div class="vote-buttons">
+                                <button class="btn btn-link vote-up"><i class="fas fa-thumbs-up">5</i></button>
+
+                                <button class="btn btn-link vote-down"><i class="fas fa-thumbs-down"></i></button>
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Tacos
+                            <div class="vote-buttons">
+                                <button class="btn btn-link vote-up  fas fa-thumbs-up  ">6</button>
+                                <button class="btn btn-link vote-down"><i class="fas fa-thumbs-down"></i></button>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="input-group">
+                            <input type="text" id="foodEntry" class="form-control" placeholder="Add a new food item">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" id="addFoodbutton" type="button">Add</button>
+                            </div>
+                        </div>
+                    </li>
+                </div>
+
+            </main>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script type="module">
+
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js";
+        import { getDatabase, ref, get, set, child, update, remove, push } from 'https://www.gstatic.com/firebasejs/9.20.0/firebase-database.js'
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyCHKTfFAGvfM0GrdKWOtH_cE1J1s1WizdA",
+            authDomain: "bakonz.firebaseapp.com",
+            databaseURL: "https://bakonz-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "bakonz",
+            storageBucket: "bakonz.appspot.com",
+            messagingSenderId: "280439747294",
+            appId: "1:280439747294:web:3cfd0e30ecf8ac2029c84f",
+            measurementId: "G-B5GMKEM4MH"
+        };
+        let currentUser=localStorage.getItem('user');
+      if(currentUser==null)
+      {
+        window.location.href = 'index.html';
+      }
+        var colors2 = '{"Boldi":"#cef01e", "Máté":"#FF5733","Áron":"#6B8E23","Kitti":"#1E90FF","Krissoi":"#FFD700","Richárd":"#9400D3","Misi":"#FF7F50","Tomi":"#008080","Bence":"#FF1493","Patrik":"#6495ED","Szandi":"#DC143C"}';
+        const colorsObject = JSON.parse(colors2);
+        const foddList = document.querySelector('#foodList');
+        const addFoodButton = document.querySelector('#addFoodbutton');
+        let foodEntry = document.querySelector('#foodEntry');
+        addFoodButton.addEventListener('click', createNewFoodEntry);
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        for (const key in colorsObject) {
+            let li = document.createElement('li');
+            li.classList.add('nav-item');
+            let a = document.createElement('a');
+            a.classList.add('nav-link');
+            a.classList.add('active');
+            a.classList.add('text-light');
+            a.innerText = key;
+            let span = document.createElement('span');
+            span.classList.add('circle');
+            span.classList.add('ml-2');
+            span.style = 'background-color:' + colorsObject[key] + ';';
+
+            a.appendChild(span);
+            li.appendChild(a);
+            sidebar.appendChild(li);
+        }
+
+        function createNewFoodEntry() {
+            let foodName = foodEntry.value;
+            if(!isExistingFood(foodName))
+            {
+                FindAllFoodsInDB();
+                AddFoodToDB(foodName);
+            }
+            else
+            {
+                alert('Ilyen mar van');
+            }
+           
+
+        }
+         function isExistingFood(foodName) {
+          
+            for(let i=0;i<foddList.childNodes.length;i++)
+            {
+                if(foddList.childNodes[i].dataset.foodName==foodName)
+                {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
+        function addFoodToList(foodName, upvotes, downwotes) {
+            if (downwotes == undefined) {
+                downwotes = [];
+            }
+            if (upvotes == undefined) {
+                upvotes = [];
+            }
+            let li = document.createElement('li');
+            let buttonup = document.createElement('button');
+
+
+            buttonup.classList.add('fas');
+            buttonup.classList.add('fa-thumbs-up');
+
+
+
+            let buttondown = document.createElement('button');
+            buttondown.classList.add('fa-thumbs-down');
+            buttondown.classList.add('fas');
+            let upvotessarr = { count: 0, isUpvotedByUser: false };
+            let downvotesarr = { count: 0, isdownVotedByUser: false };
+            let upvoters = '';
+            let downvoters = '';
+            for (const key in upvotes) {
+                upvotessarr.count++;
+                upvoters = upvoters + upvotes[key] + ',';
+                if (upvotes[key] == currentUser) {
+                    upvotessarr.isUpvotedByUser = true
+                }
+            }
+            li.dataset.upvoters = upvoters;
+
+            console.log();
+            for (const key in downwotes) {
+                downvotesarr.count++;
+                downvoters = downvoters + ',';
+
+                if (downwotes[key] == currentUser) {
+                    downvotesarr.isdownVotedByUser = true;
+                }
+            }
+            li.dataset.upvotes = upvotessarr.count;
+            li.dataset.downvotes = downvotesarr.count;
+            buttonup.innerText = upvotessarr.count;
+            buttondown.innerText = downvotesarr.count;
+            buttondown.addEventListener('click', HandleDownVoting);
+            if (upvotessarr.isUpvotedByUser) {
+                buttonup.style.opacity = 0.5;
+
+
+            }
+            else {
+
+            }
+
+
+            if (downvotesarr.isdownVotedByUser) {
+
+                buttondown.style.opacity = 0.5;
+
+            }
+            else {
+
+            }
+
+            buttonup.addEventListener('click', HandleUpvoting);
+            buttonup.classList.add(['btn', 'btn-link', 'vote-up']);
+            buttonup.classList.add(['btn']);
+            buttonup.classList.add('btn-link');
+            buttonup.classList.add('vote-up');
+
+            buttondown.classList.add('btn');
+            buttondown.classList.add('btn-link');
+            buttondown.classList.add('vote-down');
+            li.dataset.foodName = foodName;
+            let div = document.createElement('div');
+            div.classList.add('vote-buttons');
+
+
+            div.appendChild(buttonup);
+            div.appendChild(buttondown);
+
+            li.classList.add('list-group-item');
+            li.classList.add('d-flex');
+            li.classList.add('list-group-item');
+            li.classList.add('justify-content-between');
+            li.classList.add('align-items-center');
+            li.innerText = foodName;
+            li.appendChild(div);
+            foddList.appendChild(li);
+        }
+        function AddFoodToDB(foodName) {
+            set(ref(db, "Foods/" + foodName), {
+                AddedBy: currentUser,
+                VotesUP: [currentUser],
+                VotesDown: []
+
+
+            })
+                .then(() => {
+
+                })
+                .catch((error) => {
+
+                });
+        }
+        function HandleUpvoting(e) {
+            let foodname = e.target.parentElement.parentElement.dataset.foodName;
+            HandleUpvotingWithDB(foodname);
+        }
+
+
+        function HandleDownVoting(e) {
+            console.log('na');
+            let foodname = e.target.parentElement.parentElement.dataset.foodName;
+            // HandleDownVoting(foodname);
+            HandleDownVotingWithDB(foodname);
+        }
+        function FindAllFoodsInDB() {
+            const dbref = ref(db);
+            foddList.innerHTML = '';
+            get(child(dbref, "Foods/"))
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+
+                        for (const key in snapshot.val()) {
+
+                            addFoodToList(key, snapshot.val()[key].VotesUP, snapshot.val()[key].VotesDown);
+                        }
+                    } else {
+
+                    }
+                })
+                .catch((error) => {
+                    alert(error)
+                })
+
+        }
+        function HandleDownVotingWithDB(foodName) {
+
+            const dbref = ref(db);
+            console.log('ez');
+
+            get(child(dbref, "Foods/" + foodName))
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+
+
+                        let got = snapshot.val();
+                        console.log('ez');
+                        if (got.VotesDown != undefined) {
+                            if (!got.VotesDown.includes(currentUser)) {
+                                got.VotesDown.push(currentUser);
+                            }
+                        }
+                        else {
+                            console.log('ez');
+                            got.VotesDown = [];
+                            got.VotesDown.push(currentUser);
+                        }
+                        if (got.VotesUP != undefined) {
+                            if (got.VotesUP.includes(currentUser)) {
+                                let userindex = got.VotesUP.indexOf(currentUser)
+                                got.VotesUP.splice(userindex, 1);
+                            }
+
+
+                        }
+                        else {
+                            got.VotesUP = [];
+                        }
+
+
+                        update(ref(db, "Foods/" + foodName), {
+                            AddedBy: got.AddedBy,
+                            VotesUP: got.VotesUP,
+                            VotesDown: got.VotesDown
+                        })
+                            .then(() => {
+                                FindAllFoodsInDB();
+                            })
+                            .catch((error) => {
+
+                            });
+
+
+
+
+                    } else {
+                        alert("No data found");
+                    }
+                })
+                .catch((error) => {
+
+                })
+
+
+
+        }
+
+        function HandleUpvotingWithDB(foodName) {
+            const dbref = ref(db);
+
+            get(child(dbref, "Foods/" + foodName))
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+
+
+                        let got = snapshot.val();
+
+                        if (got.VotesUP != undefined) {
+                            if (!got.VotesUP.includes(currentUser)) {
+                                got.VotesUP.push(currentUser);
+                            }
+                        }
+                        else {
+                            got.VotesUP = [];
+                            got.VotesUP.push(currentUser);
+                        }
+                        if (got.VotesDown != undefined) {
+                            if (got.VotesDown.includes(currentUser)) {
+                                let userindex = got.VotesDown.indexOf(currentUser)
+                                got.VotesDown.splice(userindex, 1);
+                            }
+
+
+                        }
+                        else {
+                            got.VotesDown = [];
+                        }
+
+
+                        update(ref(db, "Foods/" + foodName), {
+                            AddedBy: got.AddedBy,
+                            VotesUP: got.VotesUP,
+                            VotesDown: got.VotesDown
+                        })
+                            .then(() => {
+                                FindAllFoodsInDB();
+                            })
+                            .catch((error) => {
+
+                            });
+
+
+
+
+                    } else {
+                        alert("No data found");
+                    }
+                })
+                .catch((error) => {
+
+                })
+
+        }
+
+
+
+
+
+
+        FindAllFoodsInDB();
+
+
+
+
+
+
+    </script>
+    <script src="https://kit.fontawesome.com/42d3d0794c.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
