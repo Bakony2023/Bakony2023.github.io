@@ -141,14 +141,17 @@
 
         function createNewFoodEntry() {
             let foodName = foodEntry.value;
-            if(!isExistingFood(foodName))
-            {
-                FindAllFoodsInDB();
-                AddFoodToDB(foodName);
+            if (foodName.trim() != "" && foodName != null && foodName != undefined) {
+                if (!isExistingFood(foodName)) {
+                    FindAllFoodsInDB();
+                    AddFoodToDB(foodName);
+                }
+                else {
+                    alert('Ilyen mar van');
+                }
             }
-            else
-            {
-                alert('Ilyen mar van');
+            else {
+                alert('ne baszd mar szet, inkabb vegyel fel valami jot mint cici')
             }
            
 
