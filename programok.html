@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Kaja</title>
+    <title>Programok</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -48,7 +48,7 @@
             </nav>
             <main role="main" class="col-md-9 bg-light ml-sm-auto col-lg-10 px-4">
                 <div class="container mt-4">
-                    <h1 class="text-center mb-4">Food Voting List</h1>
+                    <h1 class="text-center mb-4">Activity voting list</h1>
                     <ul id="foodList" class="list-group">
                         <li id="Pizza" class="list-group-item d-flex justify-content-between align-items-center">
 
@@ -76,7 +76,7 @@
                     </ul>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div class="input-group">
-                            <input type="text" id="foodEntry" class="form-control" placeholder="Add a new food item">
+                            <input type="text" id="foodEntry" class="form-control" placeholder="Add a new activity">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" id="addFoodbutton" type="button">Add</button>
                             </div>
@@ -108,11 +108,10 @@
             appId: "1:280439747294:web:3cfd0e30ecf8ac2029c84f",
             measurementId: "G-B5GMKEM4MH"
         };
-        let currentUser=localStorage.getItem('user');
-      if(currentUser==null)
-      {
-        window.location.href = 'index.html';
-      }
+        let currentUser = localStorage.getItem('user');
+        if (currentUser == null) {
+            window.location.href = 'index.html';
+        }
         var colors2 = '{"Boldi":"#cef01e", "Máté":"#FF5733","Áron":"#6B8E23","Kitti":"#1E90FF","Krissoi":"#FFD700","Richárd":"#9400D3","Misi":"#FF7F50","Tomi":"#008080","Bence":"#FF1493","Patrik":"#6495ED","Szandi":"#DC143C"}';
         const colorsObject = JSON.parse(colors2);
         const foddList = document.querySelector('#foodList');
@@ -151,17 +150,16 @@
                 }
             }
             else {
-                alert('ne baszd mar szet, inkabb vegyel fel valami jot mint cici')
+                alert('ne baszd mar szet, inkabb vegyel fel valami jot mint sex')
             }
-           
+
+
 
         }
-         function isExistingFood(foodName) {
-          
-            for(let i=0;i<foddList.childNodes.length;i++)
-            {
-                if(foddList.childNodes[i].dataset.foodName==foodName)
-                {
+        function isExistingFood(foodName) {
+
+            for (let i = 0; i < foddList.childNodes.length; i++) {
+                if (foddList.childNodes[i].dataset.foodName == foodName) {
                     return true;
                 }
             }
@@ -261,7 +259,7 @@
             foddList.appendChild(li);
         }
         function AddFoodToDB(foodName) {
-            set(ref(db, "Foods/" + foodName), {
+            set(ref(db, "Activities/" + foodName), {
                 AddedBy: currentUser,
                 VotesUP: [currentUser],
                 VotesDown: []
@@ -290,7 +288,7 @@
         function FindAllFoodsInDB() {
             const dbref = ref(db);
             foddList.innerHTML = '';
-            get(child(dbref, "Foods/"))
+            get(child(dbref, "Activities/"))
                 .then((snapshot) => {
                     if (snapshot.exists()) {
 
@@ -312,7 +310,7 @@
             const dbref = ref(db);
             console.log('ez');
 
-            get(child(dbref, "Foods/" + foodName))
+            get(child(dbref, "Activities/" + foodName))
                 .then((snapshot) => {
                     if (snapshot.exists()) {
 
@@ -342,7 +340,7 @@
                         }
 
 
-                        update(ref(db, "Foods/" + foodName), {
+                        update(ref(db, "Activities/" + foodName), {
                             AddedBy: got.AddedBy,
                             VotesUP: got.VotesUP,
                             VotesDown: got.VotesDown
@@ -372,7 +370,7 @@
         function HandleUpvotingWithDB(foodName) {
             const dbref = ref(db);
 
-            get(child(dbref, "Foods/" + foodName))
+            get(child(dbref, "Activities/" + foodName))
                 .then((snapshot) => {
                     if (snapshot.exists()) {
 
@@ -401,7 +399,7 @@
                         }
 
 
-                        update(ref(db, "Foods/" + foodName), {
+                        update(ref(db, "Activities/" + foodName), {
                             AddedBy: got.AddedBy,
                             VotesUP: got.VotesUP,
                             VotesDown: got.VotesDown
