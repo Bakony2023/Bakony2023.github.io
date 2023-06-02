@@ -1,6 +1,6 @@
 const loginButton=document.querySelector('#loginButton');
 const select=document.querySelector('#selectUser');
-
+alert("fasz")
 let currentUser=localStorage.getItem('user');
 if(currentUser!=null)
 {
